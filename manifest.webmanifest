@@ -1,0 +1,16 @@
+{
+  "name": "TreapEasy",
+  "short_name": "TreapEasy",
+  "description": "AI-планировщик путешествий с маршрутами, картой, жильем, едой и активностями.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f4f2ed",
+  "theme_color": "#176b5d",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "64x64",
+      "type": "image/svg+xml"
+    }
+  ]
+}

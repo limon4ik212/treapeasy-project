@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="TreapEasy - AI-планировщик путешествий с маршрутами, картой, жильем, едой и активностями." />
+  <meta name="theme-color" content="#176b5d" />
+  <meta property="og:title" content="TreapEasy - AI-планирование путешествий" />
+  <meta property="og:description" content="Соберите готовый маршрут поездки за минуту: места, питание, жилье, активности и карта." />
+  <meta property="og:type" content="website" />
+  <title>TreapEasy - AI-планировщик путешествий</title>
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest" />
+  
+  <link rel="stylesheet" href="style.css?v=20260428-final-product" />
+  <link rel="stylesheet" href="growth.css" />
+</head>
+<body>
+<div class="app">
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-logo">✈️</div>
+        <div>
+          <div class="brand">TreapEasy</div>
+          <div class="brand-sub">AI-планирование путешествий</div>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <button class="link-btn" onclick="showSavedRoutes()">Мои маршруты</button>
+        <button class="link-btn" id="loginTopBtn" onclick="openAuth()">Вход</button>
+        <div class="user-box hidden" id="userBox">
+          <span id="userNameBadge"></span>
+          <button class="link-btn" onclick="logout()">Выйти</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- HOME -->
+    <section class="screen active" id="home">
+      <div class="hero card">
+        <div class="hero-left">
+          <span class="tag">AI Travel Planner</span>
+          <h1>Соберите поездку за минуту</h1>
+          <p>TreapEasy подбирает маршрут, места, еду, жилье и активности под ваш город, бюджет, даты и интересы.</p>
+          <div class="row">
+            <button class="btn" onclick="startPlanner()">Планирование поездки</button>
+            <button class="btn secondary" onclick="startTours()">Готовые туры</button>
+          </div>
+          <div class="hero-stats">
+            <span><strong>3 дня</strong> готовый план</span>
+            <span><strong>AI</strong> подбор мест</span>
+            <span><strong>Map</strong> координаты</span>
+          </div>
+        </div>
+        <div class="hero-right">
+          <img src="assets/travel-hero.png" alt="Travel planning preview" />
+          <div class="hero-note">Маршрут · еда · жилье · активности</div>
+        </div>
+      </div>
+
+      <div class="section-head">
+      </div>
+
+      <div class="value-strip">
+        <div>
+          <strong>Умный маршрут</strong>
+          <span>дни, места и логистика</span>
+        </div>
+        <div>
+          <strong>Еда и жилье</strong>
+          <span>готовые подборки под город</span>
+        </div>
+        <div>
+          <strong>Сохранение</strong>
+          <span>маршруты остаются в браузере</span>
+        </div>
+        <div>
+          <strong>Экспорт</strong>
+          <span>печать и файл с планом</span>
+        </div>
+      </div>
+
+      <div class="section-head space-top">
+        <h2>Рекомендации</h2>
+        <p>Популярные направления и идеи для поездок</p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card recommendation-card" onclick="startTours()">
+          <div class="rec-image blue">🌊</div>
+          <div class="rec-body">
+            <div class="rec-place">Таиланд, Пхукет</div>
+            <h3>Пляжный отдых и гастрономия</h3>
+            <p>Подходит для отдыха у моря, локальной еды и вечерних прогулок.</p>
+            <div class="price-row">
+              <span class="price-main">от 1 144 212 ₸</span>
+              <span class="price-chip">47 676 ₸ x24</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card recommendation-card" onclick="startTours()">
+          <div class="rec-image green">🌲</div>
+          <div class="rec-body">
+            <div class="rec-place">Алматы</div>
+            <h3>Горы, природа и релакс</h3>
+            <p>Отличный вариант для короткой поездки, горного воздуха и спокойного отдыха.</p>
+            <div class="price-row">
+              <span class="price-main">от 125 000 ₸</span>
+              <span class="price-chip">10 417 ₸ x12</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card recommendation-card" onclick="startTours()">
+          <div class="rec-image purple">🏙️</div>
+          <div class="rec-body">
+            <div class="rec-place">Стамбул</div>
+            <h3>История, шопинг и культура</h3>
+            <p>Маршруты по старому городу, рынкам, музеям и местной кухне.</p>
+            <div class="price-row">
+              <span class="price-main">от 475000 ₸</span>
+              <span class="price-chip">39500 ₸ x12 </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AUTH -->
+    <section class="screen" id="auth">
+      <div class="center-wrap">
+        <div class="card auth-card">
+          <h2>Авторизация</h2>
+          <p class="subtitle">Для продолжения выполните вход или быструю регистрацию.</p>
+
+          <div class="field">
+            <label for="name">Имя</label>
+            <input id="name" type="text" placeholder="Введите имя" />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="example@mail.com" />
+          </div>
+          <div class="field">
+            <label for="password">Пароль</label>
+            <input id="password" type="password" placeholder="••••••••" />
+          </div>
+
+          <div class="row">
+            <button class="btn" onclick="handleAuth()">Войти / Зарегистрироваться</button>
+            <button class="btn secondary" onclick="goHome()">Назад</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRANSPORT -->
+    <section class="screen" id="transport">
+      <div class="card">
+        <h2>Выберите вид транспорта</h2>
+        <p class="subtitle">Нажмите на один вариант транспорта, затем перейдите к параметрам поездки.</p>
+        <div class="grid grid-4" id="transportGrid">
+          <div class="card transport-card" data-value="Самолет" onclick="selectTransport(this)">
+            <div class="transport-icon">✈️</div>
+            <strong>Самолет</strong>
+          </div>
+          <div class="card transport-card" data-value="Поезд" onclick="selectTransport(this)">
+            <div class="transport-icon">🚆</div>
+            <strong>Поезд</strong>
+          </div>
+          <div class="card transport-card" data-value="Автобус" onclick="selectTransport(this)">
+            <div class="transport-icon">🚌</div>
+            <strong>Автобус</strong>
+          </div>
+          <div class="card transport-card" data-value="Машина" onclick="selectTransport(this)">
+            <div class="transport-icon">🚗</div>
+            <strong>Машина</strong>
+          </div>
+        </div>
+        <div class="row mt-20">
+          <button class="btn" onclick="continueToParams()">Продолжить</button>
+          <button class="btn secondary" onclick="goHome()">На главную</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARAMS -->
+    <section class="screen" id="params">
+      <div class="card">
+        <h2>Параметры поездки</h2>
+        <p class="subtitle">Заполните все данные, затем нажмите кнопку генерации маршрута.</p>
+
+        <div class="grid grid-3">
+          <div class="field">
+            <label>Откуда</label>
+            <input id="fromCity" placeholder="Например, Алматы" />
+          </div>
+          <div class="field">
+            <label>Куда</label>
+            <input id="toCity" placeholder="Например, Стамбул" />
+          </div>
+          <div class="field">
+            <label>Количество людей</label>
+            <input id="people" type="number" min="1" value="2" />
+          </div>
+
+          <div class="field">
+            <label>Дата начала</label>
+            <input id="dateStart" type="date" />
+          </div>
+          <div class="field">
+            <label>Дата окончания</label>
+            <input id="dateEnd" type="date" />
+          </div>
+          <div class="field">
+            <label>Бюджет (₸)</label>
+            <input id="budget" type="number" min="100" value="1200" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Интересы</label>
+          <input id="interests" placeholder="Например, еда, природа, музеи, шопинг" />
+        </div>
+        <div class="quick-interests">
+          <button type="button" onclick="addInterest('еда')">Еда</button>
+          <button type="button" onclick="addInterest('природа')">Природа</button>
+          <button type="button" onclick="addInterest('музеи')">Музеи</button>
+          <button type="button" onclick="addInterest('шопинг')">Шопинг</button>
+          <button type="button" onclick="addInterest('фото')">Фото</button>
+        </div>
+        <div class="field">
+          <label>Выбранный транспорт</label>
+          <input id="transportView" readonly />
+        </div>
+
+        <div class="row">
+          <button class="btn" onclick="generateRoute()">Сгенерировать маршрут</button>
+          <button class="btn secondary" onclick="showScreen('transport')">Назад</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LOADING -->
+    <section class="screen" id="loading">
+      <div class="center-wrap">
+        <div class="card center-card">
+          <h2>ИИ анализирует данные</h2>
+          <p class="subtitle">Пожалуйста, подождите. Система подбирает удобный маршрут, места, питание, жилье и активности.</p>
+          <div class="big-emoji">🤖</div>
+          <button class="btn secondary" disabled>Генерация...</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section class="screen" id="result">
+      <div class="two-col">
+        <div>
+          <div class="card">
+            <div class="result-header">
+              <div>
+                <h2 id="resultTitle">Готовый маршрут</h2>
+                <p class="subtitle" id="resultSummary"></p>
+              </div>
+              <div id="resultPills"></div>
+            </div>
+
+            <div class="result-tools">
+              <button class="tool-btn" onclick="saveRoute()">Сохранить</button>
+              <button class="tool-btn" onclick="downloadRoute()">Экспорт TXT</button>
+              <button class="tool-btn" onclick="printRoute()">Печать</button>
+              <button class="tool-btn" onclick="shareRoute()">Ссылка</button>
+            </div>
+
+            <div class="trip-overview" id="tripOverview"></div>
+
+            <h3>Маршрут по дням</h3>
+            <div id="daysContainer"></div>
+
+            <div class="question">
+              <strong>Подходит ли вам маршрут?</strong>
+              <div class="row mt-12">
+                <button class="btn green" onclick="acceptRoute()">Да</button>
+                <button class="btn red" onclick="rejectRoute()">Нет</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card">
+            <h3>Интересные места</h3>
+            <ul class="small-list" id="placesList"></ul>
+          </div>
+
+          <div class="card">
+            <h3>Питание / рестораны</h3>
+            <ul class="small-list" id="foodList"></ul>
+          </div>
+
+          <div class="card">
+            <h3>Жилье / отели</h3>
+            <ul class="small-list" id="hotelList"></ul>
+          </div>
+
+<div class="card">
+  <h3>Активности / достопримечательности</h3>
+  <ul class="small-list" id="activitiesList"></ul>
+</div>
+
+<div class="card">
+  <h3>Карта маршрута</h3>
+  <div class="route-map">
+    <iframe
+      id="routeMapFrame"
+      src="https://www.google.com/maps?q=Istanbul&output=embed"
+      width="100%"
+      height="320"
+      style="border:0; border-radius:16px;"
+      allowfullscreen=""
+      loading="lazy">
+    </iframe>
+  </div>
+  <a class="map-link" id="mapExternalLink" href="#" target="_blank" rel="noopener">Открыть карту отдельно</a>
+</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PREFERENCES -->
+    <section class="screen" id="preferences">
+      <div class="center-wrap">
+        <div class="card auth-card">
+          <h2>Дополните информацию о своих предпочтениях</h2>
+          <p class="subtitle">Если маршрут не подошел, укажите дополнительные интересы — система пересоберет маршрут.</p>
+
+          <div class="field">
+            <label>Что добавить или изменить?</label>
+            <textarea id="morePrefs" placeholder="Например: больше природы, меньше музеев, недорогие кафе, больше прогулок вечером"></textarea>
+          </div>
+
+          <div class="row">
+            <button class="btn" onclick="regenerateWithPrefs()">Сгенерировать маршрут заново</button>
+            <button class="btn secondary" onclick="showScreen('result')">Назад</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL -->
+    <section class="screen" id="final">
+      <div class="center-wrap">
+        <div class="card center-card">
+          <h2>Маршрут подтвержден</h2>
+          <p class="subtitle">Вы выбрали вариант “Да”. Маршрут готов: его можно сохранить, распечатать или экспортировать в файл.</p>
+          <div class="final-summary" id="finalSummary"></div>
+          <div class="row center">
+            <button class="btn" onclick="saveRoute()">Сохранить маршрут</button>
+            <button class="btn secondary" onclick="shareRoute()">Поделиться</button>
+            <button class="btn secondary" onclick="downloadRoute()">Экспорт TXT</button>
+            <button class="btn secondary" onclick="printRoute()">Печать</button>
+          </div>
+          <p id="finalMsg" class="info-msg"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SAVED ROUTES -->
+    <section class="screen" id="savedRoutes">
+      <div class="card">
+        <div class="result-header">
+          <div>
+            <h2>Мои маршруты</h2>
+            <p class="subtitle">Сохраненные планы поездок на этом устройстве.</p>
+          </div>
+          <button class="btn secondary" onclick="goHome()">На главную</button>
+        </div>
+        <div class="saved-grid" id="savedRoutesList"></div>
+      </div>
+    </section>
+
+    <!-- TOURS -->
+    <section class="screen" id="tours">
+      <div class="card">
+        <h2>Готовые туры</h2>
+        <p class="subtitle">Выберите один из готовых маршрутов. После открытия вы увидите базовую информацию.</p>
+        <div class="grid grid-3">
+          <div class="card route-card" onclick="openTour('Стамбул', '5 дней', '$950')">
+            <h3>Стамбул</h3>
+            <p>5 дней · культура · еда</p>
+            <strong>$950</strong>
+          </div>
+          <div class="card route-card" onclick="openTour('Алматы', '3 дня', '$400')">
+            <h3>Алматы</h3>
+            <p>3 дня · природа · город</p>
+            <strong>$400</strong>
+          </div>
+          <div class="card route-card" onclick="openTour('Дубай', '4 дня', '$1450')">
+            <h3>Дубай</h3>
+            <p>4 дня · комфорт · шопинг</p>
+            <strong>$1450</strong>
+          </div>
+          <div class="card route-card" onclick="openTour('Париж', '4 дня', '$1200')">
+            <h3>Париж</h3>
+            <p>4 дня · музеи · романтика</p>
+            <strong>$1200</strong>
+          </div>
+          <div class="card route-card" onclick="openTour('Лондон', '4 дня', '$1150')">
+            <h3>Лондон</h3>
+            <p>4 дня · история · город</p>
+            <strong>$1150</strong>
+          </div>
+          <div class="card route-card" onclick="openTour('Рим', '4 дня', '$980')">
+            <h3>Рим</h3>
+            <p>4 дня · античность · еда</p>
+            <strong>$980</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOUR INFO -->
+    <section class="screen" id="tourInfo">
+      <div class="center-wrap wide">
+        <div class="card">
+          <h2 id="tourTitle">Информация о готовом маршруте</h2>
+          <p class="subtitle">Базовая информация доступна сразу: жилье, транспорт, питание.</p>
+
+          <div class="grid grid-3">
+            <div class="card mini-soft">
+              <h3>Жилье</h3>
+              <p id="tourHotel"></p>
+            </div>
+            <div class="card mini-soft">
+              <h3>Транспорт</h3>
+              <p id="tourTransport"></p>
+            </div>
+            <div class="card mini-soft">
+              <h3>Питание</h3>
+              <p id="tourFood"></p>
+            </div>
+          </div>
+
+          <div class="question">
+            <strong>Хотите полный маршрут?</strong>
+            <div class="row mt-12">
+              <button class="btn green" onclick="buyFullRoute()">Да</button>
+              <button class="btn secondary" onclick="showScreen('tours')">Нет</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PURCHASE -->
+    <section class="screen" id="purchase">
+      <div class="center-wrap">
+        <div class="card auth-card">
+          <h2>Разовая покупка / подписка</h2>
+          <p class="subtitle">Для открытия полного маршрута оформите разовую покупку.</p>
+          <div class="row">
+            <button class="btn" onclick="unlockFullRoute()">Купить полный маршрут</button>
+            <button class="btn secondary" onclick="showScreen('tourInfo')">Назад</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PURCHASED ROUTE -->
+    <section class="screen" id="purchasedRoute">
+      <div class="center-wrap wide">
+        <div class="card">
+          <h2>Полный маршрут открыт</h2>
+          <p class="subtitle" id="purchasedSummary"></p>
+          <ul class="small-list" id="purchasedList"></ul>
+          <div class="row mt-20">
+            <button class="btn" onclick="saveRoute()">Сохранить маршрут</button>
+            <button class="btn secondary" onclick="shareRoute()">Поделиться</button>
+          </div>
+          <p id="purchasedMsg" class="info-msg"></p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script src="script.js?v=20260428-final-product"></script>
+<script src="growth.js" defer></script>
+</body>
+</html>
